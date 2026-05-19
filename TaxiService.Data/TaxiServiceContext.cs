@@ -7,8 +7,10 @@ namespace TaxiService.Data
 {
     public class TaxiServiceContext : DbContext
     {
+        /// <summary>Создаёт контекст с настройкой подключения по умолчанию.</summary>
         public TaxiServiceContext() { }
 
+        /// <summary>Создаёт контекст с явной передачей параметров EF Core.</summary>
         public TaxiServiceContext(DbContextOptions<TaxiServiceContext> options) : base(options) { }
 
         public DbSet<User> Users => Set<User>();
@@ -19,6 +21,7 @@ namespace TaxiService.Data
         public DbSet<Payment> Payments => Set<Payment>();
         public DbSet<Review> Reviews => Set<Review>();
 
+        /// <summary>Автоматически подставляет строку подключения к SQL Server.</summary>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -27,6 +30,7 @@ namespace TaxiService.Data
             }
         }
 
+        /// <summary>Настраивает точные типы decimal для числовых столбцов БД.</summary>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

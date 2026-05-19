@@ -25,6 +25,8 @@ namespace TaxiService.Business.Modules
 
         #region Методы расчёта стоимости
 
+        /// <summary>Рассчитывает стоимость поездки по расстоянию и тарифу</summary>
+        /// <returns>Округлённая стоимость поездки</returns>
         public decimal CalculateTripCost(decimal distanceKm, int tariffId)
         {
             if (distanceKm < 0)
@@ -38,6 +40,8 @@ namespace TaxiService.Business.Modules
             return Math.Round(cost, 2);
         }
 
+        /// <summary>Вычисляет комиссию сервиса от общей стоимости поездки</summary>
+        /// <returns>Сумма комиссии</returns>
         public decimal CalculateServiceCommission(decimal totalCost, int tariffId)
         {
             var tariff = _context.Tariffs.Find(tariffId);
@@ -52,12 +56,16 @@ namespace TaxiService.Business.Modules
 
         #region Методы проверки доступности
 
+        /// <summary>Проверяет, свободен ли водитель для новой поездки</summary>
+        /// <returns>True, если статус водителя "Available"</returns>
         public bool IsDriverAvailable(int driverId)
         {
             var driver = _context.Drivers.Find(driverId);
             return driver != null && driver.Status.Equals("Available", StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <summary>Возвращает список всех свободных водителей с их автомобилями</summary>
+        /// <returns>Список доступных водителей</returns>
         public List<Driver> GetAvailableDrivers()
         {
             return _context.Drivers
@@ -70,6 +78,8 @@ namespace TaxiService.Business.Modules
 
         #region Методы работы с поездками
 
+        /// <summary>Создаёт новую поездку, рассчитывает стоимость и меняет статус водителя на "Busy"</summary>
+        /// <returns>Созданный объект поездки</returns>
         public Trip CreateTrip(int userId, int? driverId, int tariffId,
             string startAddress, string endAddress, decimal distanceKm)
         {
@@ -106,6 +116,8 @@ namespace TaxiService.Business.Modules
             return trip;
         }
 
+        /// <summary>Возвращает историю поездок пользователя, отсортированную по дате</summary>
+        /// <returns>Список поездок</returns>
         public List<Trip> GetUserTripHistory(int userId)
         {
             return _context.Trips
@@ -118,6 +130,7 @@ namespace TaxiService.Business.Modules
                 .ToList();
         }
 
+        /// <summary>Завершает поездку и возвращает водителю статус "Available"</summary>
         public void CompleteTrip(int tripId)
         {
             var trip = _context.Trips.Find(tripId);
@@ -143,6 +156,8 @@ namespace TaxiService.Business.Modules
 
         #region Формирование квитанции
 
+        /// <summary>Формирует текстовую квитанцию с деталями поездки, оплаты и маршрута</summary>
+        /// <returns>Строка с форматированной квитанцией</returns>
         public string GenerateReceipt(int tripId)
         {
             var trip = _context.Trips
@@ -215,21 +230,28 @@ namespace TaxiService.Business.Modules
 
         #region Получение данных
 
+        /// <summary>Возвращает все тарифы из базы данных</summary>
+        /// <returns>Список тарифов</returns>
         public List<Tariff> GetAllTariffs()
         {
             return _context.Tariffs.ToList();
         }
 
+        /// <summary>Возвращает всех зарегистрированных пользователей</summary>
+        /// <returns>Список пользователей</returns>
         public List<User> GetAllUsers()
         {
             return _context.Users.ToList();
         }
 
+        /// <summary>Возвращает всех водителей с привязанными автомобилями</summary>
+        /// <returns>Список водителей</returns>
         public List<Driver> GetAllDrivers()
         {
             return _context.Drivers.Include(d => d.Car).ToList();
         }
 
+        /// <summary>Обновляет статус конкретного водителя в базе данных</summary>
         public void UpdateDriverStatus(int driverId, string status)
         {
             var driver = _context.Drivers.Find(driverId);
@@ -240,6 +262,8 @@ namespace TaxiService.Business.Modules
             }
         }
 
+        /// <summary>Создаёт запись об оплате для указанной поездки</summary>
+        /// <returns>Созданный объект платежа</returns>
         public Payment CreatePayment(int tripId, decimal amount, string method)
         {
             var payment = new Payment
@@ -260,6 +284,7 @@ namespace TaxiService.Business.Modules
 
         #region IDisposable
 
+        /// <summary>Освобождает управляемые ресурсы, включая контекст БД</summary>
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
@@ -272,6 +297,7 @@ namespace TaxiService.Business.Modules
             }
         }
 
+        /// <summary>Освобождает все ресурсы, используемые модулем</summary>
         public void Dispose()
         {
             Dispose(true);
@@ -282,6 +308,9 @@ namespace TaxiService.Business.Modules
 
 
         #region Методы работы с отзывами
+
+        /// <summary>Создаёт отзыв к поездке и пересчитывает средний рейтинг водителя</summary>
+        /// <returns>Созданный объект отзыва</returns>
         public Review CreateReview(int tripId, int rating, string? comment)
         {
             var trip = _context.Trips.Find(tripId);
@@ -318,6 +347,8 @@ namespace TaxiService.Business.Modules
             return review;
         }
 
+        /// <summary>Возвращает все отзывы, оставленные к конкретной поездке</summary>
+        /// <returns>Список отзывов</returns>
         public List<Review> GetTripReviews(int tripId)
         {
             return _context.Reviews
@@ -327,6 +358,8 @@ namespace TaxiService.Business.Modules
                 .ToList();
         }
 
+        /// <summary>Возвращает все отзывы о водителе, отсортированные по дате</summary>
+        /// <returns>Список отзывов</returns>
         public List<Review> GetDriverReviews(int driverId)
         {
             return _context.Reviews

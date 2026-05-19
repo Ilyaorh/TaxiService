@@ -24,7 +24,7 @@ namespace TaxiService.Tests
         }
 
         [TestMethod]
-        public void CalculateTripCost_ValidInput_ReturnsCorrectCost()
+        public void CalculateTripCost_ValidInput_ReturnsCorrectCost() // Проверяет корректный расчёт стоимости
         {
             decimal distance = 10;
             int tariffId = 1;
@@ -35,7 +35,7 @@ namespace TaxiService.Tests
         }
 
         [TestMethod]
-        public void CalculateTripCost_ZeroDistance_ReturnsBasePrice()
+        public void CalculateTripCost_ZeroDistance_ReturnsBasePrice() // Проверяет возврат базовой цены при нулевом расстоянии
         {
             decimal distance = 0;
             int tariffId = 1;
@@ -47,13 +47,13 @@ namespace TaxiService.Tests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void CalculateTripCost_NegativeDistance_ThrowsException()
+        public void CalculateTripCost_NegativeDistance_ThrowsException() // Проверяет выброс исключения при отрицательном расстоянии
         {
             _module.CalculateTripCost(-5, 1);
         }
 
         [TestMethod]
-        public void CalculateServiceCommission_ValidInput_ReturnsCorrectCommission()
+        public void CalculateServiceCommission_ValidInput_ReturnsCorrectCommission() // Проверяет корректный расчёт комиссии сервиса
         {
             decimal totalCost = 200;
             int tariffId = 1;
@@ -64,7 +64,7 @@ namespace TaxiService.Tests
         }
 
         [TestMethod]
-        public void IsDriverAvailable_AvailableDriver_ReturnsTrue()
+        public void IsDriverAvailable_AvailableDriver_ReturnsTrue() // Проверяет статус Available возвращает True
         {
             int driverId = 1;
 
@@ -74,7 +74,7 @@ namespace TaxiService.Tests
         }
 
         [TestMethod]
-        public void IsDriverAvailable_BusyDriver_ReturnsFalse()
+        public void IsDriverAvailable_BusyDriver_ReturnsFalse() // Проверяет статус Busy возвращает False
         {
             int driverId = 3;
 
@@ -84,7 +84,7 @@ namespace TaxiService.Tests
         }
 
         [TestMethod]
-        public void GenerateReceipt_ValidTripId_ReturnsReceiptString()
+        public void GenerateReceipt_ValidTripId_ReturnsReceiptString() // Проверяет генерацию чека для существующей поездки
         {
             int tripId = 1;
 
@@ -96,7 +96,7 @@ namespace TaxiService.Tests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void GenerateReceipt_InvalidTripId_ThrowsException()
+        public void GenerateReceipt_InvalidTripId_ThrowsException() // Проверяет выброс исключения для несуществующей поездки
         {
             _module.GenerateReceipt(9999);
         }

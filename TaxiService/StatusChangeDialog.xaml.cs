@@ -13,6 +13,7 @@ namespace TaxiService.WPF
             cbStatus.SelectedIndex = 0;
         }
 
+        /// <summary>Сохраняет выбранный статус и подтверждает диалог</summary>
         private void BtnOk_Click(object sender, RoutedEventArgs e)
         {
             SelectedStatus = cbStatus.SelectedItem?.ToString() ?? string.Empty;
@@ -20,6 +21,7 @@ namespace TaxiService.WPF
             Close();
         }
 
+        /// <summary>Отменяет изменение и закрывает диалог</summary>
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = false;

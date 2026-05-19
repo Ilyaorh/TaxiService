@@ -7,6 +7,7 @@ namespace TaxiService.WPF.Converters
 {
     public class StatusToColorConverter : IValueConverter
     {
+        /// <summary>Преобразует строковый статус водителя в цвет кисти</summary>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string status = value as string;
@@ -20,6 +21,7 @@ namespace TaxiService.WPF.Converters
             };
         }
 
+        /// <summary>Обратное преобразование не реализовано</summary>
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();

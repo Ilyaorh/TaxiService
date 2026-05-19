@@ -19,6 +19,7 @@ namespace TaxiService.WPF
             LoadInitialData();
         }
 
+        /// <summary>Заполняет ComboBox пользователями, тарифами и водителями</summary>
         private void LoadInitialData()
         {
             try
@@ -46,6 +47,7 @@ namespace TaxiService.WPF
             }
         }
 
+        /// <summary>Обновляет список водителей в UI</summary>
         private void LoadDrivers()
         {
             var drivers = _module.GetAllDrivers();
@@ -56,16 +58,19 @@ namespace TaxiService.WPF
             icDrivers.ItemsSource = _module.GetAvailableDrivers();
         }
 
+        /// <summary>Пересчитывает стоимость при смене тарифа</summary>
         private void CbTariffs_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             CalculateCost();
         }
 
+        /// <summary>Пересчитывает стоимость при изменении расстояния</summary>
         private void TxtDistance_TextChanged(object sender, TextChangedEventArgs e)
         {
             CalculateCost();
         }
 
+        /// <summary>Вычисляет стоимость, комиссию и обновляет текствые поля</summary>
         private void CalculateCost()
         {
             if (cbTariffs.SelectedItem is Tariff selectedTariff &&
@@ -96,6 +101,7 @@ namespace TaxiService.WPF
             }
         }
 
+        /// <summary>Валидирует форму и создаёт новую поездку</summary>
         private void BtnCreateTrip_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -154,11 +160,13 @@ namespace TaxiService.WPF
             }
         }
 
+        /// <summary>Обновляет карточки водителей на вкладке</summary>
         private void BtnRefreshDrivers_Click(object sender, RoutedEventArgs e)
         {
             LoadDrivers();
         }
 
+        /// <summary>Открывает диалог и меняет статус выбранного водителя</summary>
         private void BtnChangeDriverStatus_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.Tag is int driverId)
@@ -174,8 +182,11 @@ namespace TaxiService.WPF
             }
         }
 
+        /// <summary>Заглушка для события выбора пользователя</summary>
         private void CbTripUsers_SelectionChanged(object sender, SelectionChangedEventArgs e) { }
 
+
+        /// <summary>Загружает и отображает историю поездок пользователя в DataGrid</summary>
         private void BtnShowTrips_Click(object sender, RoutedEventArgs e)
         {
             if (cbTripUsers.SelectedItem is User selectedUser)
@@ -198,8 +209,10 @@ namespace TaxiService.WPF
             }
         }
 
+        /// <summary>Заглушка для события выделения строки</summary>
         private void DgTrips_SelectionChanged(object sender, SelectionChangedEventArgs e) { }
 
+        /// <summary>Регистрирует платёж, завершает поездку и выводит квитанцию</summary>
         private void BtnPay_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -239,12 +252,14 @@ namespace TaxiService.WPF
             }
         }
 
+        /// <summary>Освобождает ресурсы бизнес-модуля при закрытии окна</summary>
         protected override void OnClosed(EventArgs e)
         {
             _module?.Dispose();
             base.OnClosed(e);
         }
 
+        /// <summary>Создаёт отзыв, обновляет рейтинг водителя и UI</summary>
         private void BtnAddReview_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -282,6 +297,7 @@ namespace TaxiService.WPF
             }
         }
 
+        /// <summary>Отображает список отзывов по ID поездки</summary>
         private void BtnShowReviews_Click(object sender, RoutedEventArgs e)
         {
             try
