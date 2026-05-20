@@ -92,6 +92,7 @@
 ## 6. Тестирование
 
 **Результаты тестов:**
+
 <img width="657" height="535" alt="image" src="https://github.com/user-attachments/assets/c740a06a-9570-4f53-a300-810ba3030f84" />
 
 
