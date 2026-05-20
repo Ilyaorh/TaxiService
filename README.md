@@ -43,7 +43,7 @@
 
 **Ввод адреса**
 
-<img width="722" height="455" alt="image" src="https://github.com/user-attachments/assets/957196cd-28f9-414e-a2a1-c5eb587f46be" />
+<img width="790" height="492" alt="image" src="https://github.com/user-attachments/assets/957196cd-28f9-414e-a2a1-c5eb587f46be" />
 
 
 
@@ -51,7 +51,7 @@
 
 **Выбор тарифа**
 
-<img width="786" height="492" alt="image" src="https://github.com/user-attachments/assets/870e5e28-f0ac-4919-8b7b-d11d833e7ac6" />
+<img width="790" height="492" alt="image" src="https://github.com/user-attachments/assets/870e5e28-f0ac-4919-8b7b-d11d833e7ac6" />
 
 
 
@@ -59,7 +59,7 @@
 
 **История поездок**
 
-<img width="732" height="458" alt="image" src="https://github.com/user-attachments/assets/97a9b48b-0777-426b-8144-a3201ec6e649" />
+<img width="790" height="492" alt="image" src="https://github.com/user-attachments/assets/97a9b48b-0777-426b-8144-a3201ec6e649" />
 
 
 
@@ -67,14 +67,14 @@
 
 **Список водителей**
 
-<img width="721" height="449" alt="image" src="https://github.com/user-attachments/assets/b0d7f0ae-8de0-4236-a610-1824220a2189" />
+<img width="790" height="492" alt="image" src="https://github.com/user-attachments/assets/b0d7f0ae-8de0-4236-a610-1824220a2189" />
 
 
 ---
 
 **Отзывы**
 
-<img width="734" height="464" alt="image" src="https://github.com/user-attachments/assets/ed06cebd-6ecc-4d27-b121-b457b88c5acb" />
+<img width="790" height="492" alt="image" src="https://github.com/user-attachments/assets/ed06cebd-6ecc-4d27-b121-b457b88c5acb" />
 
 
 
@@ -82,7 +82,7 @@
 
 **Страница оплаты**
 
-<img width="667" height="296" alt="image" src="https://github.com/user-attachments/assets/b9c03333-9834-4ae6-a6af-0c2f68b927c2" />
+<img width="790" height="492" alt="image" src="https://github.com/user-attachments/assets/b9c03333-9834-4ae6-a6af-0c2f68b927c2" />
 
 
 
