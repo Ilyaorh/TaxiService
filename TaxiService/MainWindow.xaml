@@ -8,7 +8,6 @@
         WindowStartupLocation="CenterScreen"
         Background="#F5F5F5"
         MinHeight="600" MinWidth="900">
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -20,7 +19,7 @@
         </Border>
 
         <TabControl Grid.Row="1" Margin="10" Background="Transparent" BorderThickness="0" FontSize="14">
-
+            <!-- 📝 Заказ поездки -->
             <TabItem Header="📝 Заказ поездки">
                 <Grid Margin="10">
                     <Grid.ColumnDefinitions>
@@ -28,50 +27,45 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
+                    <!-- Левая колонка: Форма заказа -->
                     <Border Grid.Column="0" Style="{StaticResource CardStyle}">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <StackPanel>
-                                <TextBlock Text="Новая поездка" FontSize="20" FontWeight="Bold" Margin="0,0,0,15" 
+                                <TextBlock Text="Новая поездка" FontSize="20" FontWeight="Bold" Margin="0,0,0,15"
                                            Foreground="#4A90E2"/>
-
                                 <TextBlock Text="Пассажир:" Margin="0,0,0,5" FontWeight="SemiBold"/>
                                 <ComboBox x:Name="cbUsers" Margin="0,0,0,10" Height="35" FontSize="13"/>
-
                                 <TextBlock Text="Тариф:" Margin="0,0,0,5" FontWeight="SemiBold"/>
-                                <ComboBox x:Name="cbTariffs" Margin="0,0,0,10" Height="35" FontSize="13" 
+                                <ComboBox x:Name="cbTariffs" Margin="0,0,0,10" Height="35" FontSize="13"
                                           SelectionChanged="CbTariffs_SelectionChanged"/>
-
                                 <TextBlock Text="Адрес отправления:" Margin="0,0,0,5" FontWeight="SemiBold"/>
-                                <TextBox x:Name="txtStartAddress" Margin="0,0,0,10" Height="35" FontSize="13" 
+                                <TextBox x:Name="txtStartAddress" Margin="0,0,0,10" Height="35" FontSize="13"
                                          VerticalContentAlignment="Center"/>
-
                                 <TextBlock Text="Адрес назначения:" Margin="0,0,0,5" FontWeight="SemiBold"/>
-                                <TextBox x:Name="txtEndAddress" Margin="0,0,0,10" Height="35" FontSize="13" 
+                                <TextBox x:Name="txtEndAddress" Margin="0,0,0,10" Height="35" FontSize="13"
                                          VerticalContentAlignment="Center"/>
-
                                 <TextBlock Text="Расстояние (км):" Margin="0,0,0,5" FontWeight="SemiBold"/>
-                                <TextBox x:Name="txtDistance" Margin="0,0,0,10" Height="35" FontSize="13" 
+                                <TextBox x:Name="txtDistance" Margin="0,0,0,10" Height="35" FontSize="13"
                                          VerticalContentAlignment="Center" TextChanged="TxtDistance_TextChanged"/>
-
                                 <TextBlock Text="Водитель (опционально):" Margin="0,0,0,5" FontWeight="SemiBold"/>
                                 <ComboBox x:Name="cbDrivers" Margin="0,0,0,15" Height="35" FontSize="13"/>
-
-                                <Button Content="➕ Создать поездку" Click="BtnCreateTrip_Click" 
-                                        Style="{StaticResource PrimaryButton}" Height="45" Margin="0,5" 
+                                <Button Content="➕ Создать поездку" Click="BtnCreateTrip_Click"
+                                        Style="{StaticResource PrimaryButton}" Height="45" Margin="0,5"
                                         FontSize="16"/>
                             </StackPanel>
                         </ScrollViewer>
                     </Border>
 
+                    <!-- Правая колонка: Расчёт и промокоды -->
                     <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="10,0,0,0">
                         <StackPanel>
-                            <TextBlock Text="💰 Расчёт стоимости" FontSize="20" FontWeight="Bold" Margin="0,0,0,15" 
+                            <TextBlock Text="💰 Расчёт стоимости" FontSize="20" FontWeight="Bold" Margin="0,0,0,15"
                                        Foreground="#4A90E2"/>
 
-                            <Border Background="#E3F2FD" Padding="15" CornerRadius="8" Margin="0,0,0,15" BorderThickness="1" 
+                            <Border Background="#E3F2FD" Padding="15" CornerRadius="8" Margin="0,0,0,15" BorderThickness="1"
                                     BorderBrush="#BBDEFB">
                                 <StackPanel>
-                                    <TextBlock x:Name="txtTariffInfo" Text="Выберите тариф" FontWeight="Bold" 
+                                    <TextBlock x:Name="txtTariffInfo" Text="Выберите тариф" FontWeight="Bold"
                                                FontSize="16" Foreground="#1976D2"/>
                                     <TextBlock x:Name="txtBasePrice" Margin="0,8,0,0" FontSize="13"/>
                                     <TextBlock x:Name="txtPricePerKm" Margin="0,4,0,0" FontSize="13"/>
@@ -80,19 +74,63 @@
 
                             <TextBlock Text="📊 Детали расчёта:" FontWeight="Bold" Margin="0,0,0,10" FontSize="14"/>
                             <Border Background="#FAFAFA" Padding="10" CornerRadius="5" Margin="0,0,0,15">
-                                <TextBlock x:Name="txtCalculationDetails" TextWrapping="Wrap" FontSize="13" 
+                                <TextBlock x:Name="txtCalculationDetails" TextWrapping="Wrap" FontSize="13"
                                            LineHeight="20"/>
                             </Border>
 
-                            <Border Background="#FFF3E0" Padding="15" CornerRadius="8" BorderThickness="1" 
+                            <!-- 🎁 БЛОК ПРОМОКОДОВ -->
+                            <Border Background="#E8F5E9" Padding="15" CornerRadius="8" Margin="0,0,0,15" BorderThickness="1" BorderBrush="#C8E6C9" Height="110">
+                                <StackPanel>
+                                    <TextBlock Text="🎁 Промокод" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" Foreground="#2E7D32"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                        <TextBox x:Name="txtPromoCode" Width="200" Height="35" FontSize="13" 
+                                                 VerticalContentAlignment="Center" Margin="0,0,10,0"/>
+                                        <Button Content="✓ Применить" Click="BtnApplyPromoCode_Click" 
+                                                Style="{StaticResource PrimaryButton}" Height="35" Width="120"/>
+                                    </StackPanel>
+                                    <TextBlock x:Name="txtPromoStatus" Margin="0,0,0,10" FontSize="13" FontWeight="Bold"/>
+                                    <TextBlock x:Name="txtOriginalCost" Margin="0,0,0,5" FontSize="13" Height="7" RenderTransformOrigin="0.5,0.5">
+                                        <TextBlock.RenderTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform ScaleY="-1"/>
+                                                <SkewTransform/>
+                                                <RotateTransform/>
+                                                <TranslateTransform/>
+                                            </TransformGroup>
+                                        </TextBlock.RenderTransform>
+                                    </TextBlock>
+                                    <TextBlock x:Name="txtDiscountAmount" Margin="0,0,0,5" FontSize="13" Foreground="#D32F2F" Height="12" RenderTransformOrigin="0.5,0.5">
+                                        <TextBlock.RenderTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform ScaleY="-1"/>
+                                                <SkewTransform/>
+                                                <RotateTransform/>
+                                                <TranslateTransform/>
+                                            </TransformGroup>
+                                        </TextBlock.RenderTransform>
+                                    </TextBlock>
+                                    <TextBlock x:Name="txtFinalCost" FontSize="16" FontWeight="Bold" Foreground="#388E3C" Height="10" RenderTransformOrigin="0.5,0.5">
+                                        <TextBlock.RenderTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform ScaleY="-1"/>
+                                                <SkewTransform/>
+                                                <RotateTransform/>
+                                                <TranslateTransform/>
+                                            </TransformGroup>
+                                        </TextBlock.RenderTransform>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Background="#FFF3E0" Padding="15" CornerRadius="8" BorderThickness="1"
                                     BorderBrush="#FFE0B2">
                                 <StackPanel>
-                                    <TextBlock Text="💵 ИТОГО К ОПЛАТЕ:" FontWeight="Bold" FontSize="14" 
-                                               Foreground="#E65100"/>
-                                    <TextBlock x:Name="txtTotalCost" FontSize="32" FontWeight="Bold" 
+                                    <TextBlock Text="💵 ИТОГО К ОПЛАТЕ:" FontWeight="Bold" FontSize="14"
+                                               Foreground="#E65100" Height="32"/>
+                                    <TextBlock x:Name="txtTotalCost" FontSize="32" FontWeight="Bold"
                                                Foreground="#E65100" Margin="0,5,0,0"/>
-                                    <TextBlock x:Name="txtCommission" FontStyle="Italic" Margin="0,8,0,0" 
-                                               FontSize="12" Foreground="#757575"/>
+                                    <TextBlock x:Name="txtCommission" FontStyle="Italic" Margin="0,8,0,0"
+                                               FontSize="12" Foreground="#757575" Height="53"/>
                                 </StackPanel>
                             </Border>
                         </StackPanel>
@@ -100,17 +138,21 @@
                 </Grid>
             </TabItem>
 
+            <!-- 🚗 Водители -->
+            <!-- 🚗 Водители -->
             <TabItem Header="🚗 Водители">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-
-                    <Button Grid.Row="0" Content="🔄 Обновить список" Click="BtnRefreshDrivers_Click" 
-                            Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left" Margin="0,0,0,10" 
-                            Height="35"/>
-
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                        <Button Content="🔄 Обновить список" Click="BtnRefreshDrivers_Click"
+Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left" Margin="0,0,10,0"
+Height="35"/>
+                        <Button x:Name="btnSortDrivers" Content="📊 Сортировка: по убыванию ⬇" Click="BtnSortDrivers_Click"
+Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left" Height="35"/>
+                    </StackPanel>
                     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                         <ItemsControl x:Name="icDrivers">
                             <ItemsControl.ItemsPanel>
@@ -122,37 +164,33 @@
                                 <DataTemplate>
                                     <Border Style="{StaticResource CardStyle}" Width="300" Margin="5">
                                         <StackPanel>
-                                            <TextBlock Text="{Binding FullName}" FontWeight="Bold" FontSize="16" 
-                                                       Foreground="#1976D2"/>
-                                            <TextBlock Text="{Binding Phone}" Margin="0,5,0,0" Foreground="Gray" 
-                                                       FontSize="13"/>
-
+                                            <TextBlock Text="{Binding FullName}" FontWeight="Bold" FontSize="16"
+Foreground="#1976D2"/>
+                                            <TextBlock Text="{Binding Phone}" Margin="0,5,0,0" Foreground="Gray"
+FontSize="13"/>
                                             <Border Background="#E8F5E9" Padding="10" CornerRadius="5" Margin="0,10,0,5">
                                                 <StackPanel>
-                                                    <TextBlock Text="🚘 Автомобиль:" FontWeight="Bold" FontSize="12" 
-                                                               Foreground="#2E7D32"/>
+                                                    <TextBlock Text="🚘 Автомобиль:" FontWeight="Bold" FontSize="12"
+Foreground="#2E7D32"/>
                                                     <TextBlock Text="{Binding Car.Model}" FontSize="13" Margin="0,3,0,0"/>
-                                                    <TextBlock Text="{Binding Car.PlateNumber}" FontSize="13" 
-                                                               FontWeight="SemiBold"/>
+                                                    <TextBlock Text="{Binding Car.PlateNumber}" FontSize="13"
+FontWeight="SemiBold"/>
                                                 </StackPanel>
                                             </Border>
-
                                             <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
                                                 <TextBlock Text="⭐ Рейтинг:" Margin="0,0,5,0" FontWeight="SemiBold"/>
-                                                <TextBlock Text="{Binding Rating, StringFormat={}{0:F1}}" 
-                                                           FontWeight="Bold" Foreground="#FFA000"/>
+                                                <TextBlock Text="{Binding Rating, StringFormat={}{0:F1}}"
+FontWeight="Bold" Foreground="#FFA000"/>
                                             </StackPanel>
-
                                             <Border Padding="8" CornerRadius="5" Margin="0,8,0,0"
-                                                    Background="{Binding Status, Converter={StaticResource StatusToColorConverter}}">
-                                                <TextBlock Text="{Binding Status}" HorizontalAlignment="Center" 
-                                                           FontWeight="Bold" Foreground="White" FontSize="13"/>
+Background="{Binding Status, Converter={StaticResource StatusToColorConverter}}">
+                                                <TextBlock Text="{Binding Status}" HorizontalAlignment="Center"
+FontWeight="Bold" Foreground="White" FontSize="13"/>
                                             </Border>
-
-                                            <Button Content="✏️ Изменить статус" Tag="{Binding DriverID}" 
-                                                    Click="BtnChangeDriverStatus_Click" 
-                                                    Style="{StaticResource PrimaryButton}" 
-                                                    Margin="0,10,0,0" Height="35"/>
+                                            <Button Content="✏️ Изменить статус" Tag="{Binding DriverID}"
+Click="BtnChangeDriverStatus_Click"
+Style="{StaticResource PrimaryButton}"
+Margin="0,10,0,0" Height="35"/>
                                         </StackPanel>
                                     </Border>
                                 </DataTemplate>
@@ -162,23 +200,22 @@
                 </Grid>
             </TabItem>
 
+            <!-- 📋 История поездок -->
             <TabItem Header="📋 История поездок">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-
                     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
-                        <TextBlock Text="👤 Пользователь:" VerticalAlignment="Center" Margin="0,0,10,0" 
+                        <TextBlock Text=" Пользователь:" VerticalAlignment="Center" Margin="0,0,10,0"
                                    FontWeight="SemiBold"/>
-                        <ComboBox x:Name="cbTripUsers" Width="250" Height="35" FontSize="13" 
+                        <ComboBox x:Name="cbTripUsers" Width="250" Height="35" FontSize="13"
                                   SelectionChanged="CbTripUsers_SelectionChanged"/>
-                        <Button Content=" Показать" Click="BtnShowTrips_Click" 
+                        <Button Content="Показать" Click="BtnShowTrips_Click"
                                 Style="{StaticResource PrimaryButton}" Margin="10,0,0,0" Height="35"/>
                     </StackPanel>
-
-                    <DataGrid Grid.Row="1" x:Name="dgTrips" AutoGenerateColumns="False" 
+                    <DataGrid Grid.Row="1" x:Name="dgTrips" AutoGenerateColumns="False"
                               IsReadOnly="True" CanUserAddRows="False"
                               SelectionChanged="DgTrips_SelectionChanged"
                               RowHeight="40" ColumnHeaderHeight="40"
@@ -197,31 +234,27 @@
                 </Grid>
             </TabItem>
 
+            <!-- 💳 Оплата -->
             <TabItem Header="💳 Оплата">
                 <Grid Margin="10">
                     <Border Style="{StaticResource CardStyle}" MaxWidth="550" HorizontalAlignment="Center">
                         <StackPanel>
-                            <TextBlock Text="💳 Оплата поездки" FontSize="24" FontWeight="Bold" 
+                            <TextBlock Text=" Оплата поездки" FontSize="24" FontWeight="Bold"
                                        HorizontalAlignment="Center" Margin="0,0,0,25" Foreground="#4A90E2"/>
-
                             <TextBlock Text="№ поездки:" Margin="0,0,0,5" FontWeight="SemiBold"/>
-                            <TextBox x:Name="txtPaymentTripId" Height="35" Margin="0,0,0,15" FontSize="13" 
+                            <TextBox x:Name="txtPaymentTripId" Height="35" Margin="0,0,0,15" FontSize="13"
                                      VerticalContentAlignment="Center"/>
-
                             <TextBlock Text="Сумма (₽):" Margin="0,0,0,5" FontWeight="SemiBold"/>
-                            <TextBox x:Name="txtPaymentAmount" Height="35" Margin="0,0,0,15" FontSize="13" 
+                            <TextBox x:Name="txtPaymentAmount" Height="35" Margin="0,0,0,15" FontSize="13"
                                      VerticalContentAlignment="Center"/>
-
                             <TextBlock Text="Способ оплаты:" Margin="0,0,0,5" FontWeight="SemiBold"/>
                             <ComboBox x:Name="cbPaymentMethod" Height="35" Margin="0,0,0,20" FontSize="13">
-                                <ComboBoxItem Content="💵 Наличные" Tag="Cash" IsSelected="True"/>
+                                <ComboBoxItem Content=" Наличные" Tag="Cash" IsSelected="True"/>
                                 <ComboBoxItem Content="💳 Карта" Tag="Card"/>
                             </ComboBox>
-
-                            <Button Content="✅ Оплатить" Click="BtnPay_Click" 
+                            <Button Content="✅ Оплатить" Click="BtnPay_Click"
                                     Style="{StaticResource PrimaryButton}" Height="45" FontSize="16"/>
-
-                            <TextBlock x:Name="txtPaymentResult" Margin="0,20,0,0" 
+                            <TextBlock x:Name="txtPaymentResult" Margin="0,20,0,0"
                                        TextWrapping="Wrap" FontWeight="Bold"
                                        HorizontalAlignment="Center" FontSize="14"
                                        Foreground="#388E3C"/>
@@ -230,46 +263,78 @@
                 </Grid>
             </TabItem>
 
-            <TabItem Header="⭐ Отзывы">
+            <!-- ⭐ Отзывы -->
+            <!-- ⭐ Рейтинг водителей -->
+            <TabItem Header="⭐Отзывы">
                 <Grid Margin="10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-
+                    <!-- Список водителей с рейтингом -->
                     <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,5,0">
-                        <StackPanel>
-                            <TextBlock Text="📝 Оставить отзыв" FontSize="20" FontWeight="Bold" 
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Text="⭐ Рейтинг водителей" 
+                          FontSize="20" FontWeight="Bold" 
                           Margin="0,0,0,15" Foreground="#4A90E2"/>
 
-                            <TextBlock Text="№ поездки:" Margin="0,0,0,5" FontWeight="SemiBold"/>
-                            <TextBox x:Name="txtReviewTripId" Height="35" Margin="0,0,0,10" 
-                        FontSize="13" VerticalContentAlignment="Center"/>
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                <ItemsControl x:Name="icDriverRatings">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#F5F5F5" Padding="15" 
+                                       CornerRadius="8" Margin="0,0,0,10">
+                                                <StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Driver.FullName}" 
+                                                      FontWeight="Bold" FontSize="16"
+                                                      Foreground="#1976D2"/>
+                                                        <TextBlock Text="⭐" FontSize="16" 
+                                                      Margin="10,0,0,0"/>
+                                                        <TextBlock Text="{Binding AverageRating, 
+                                                      StringFormat={}{0:F1}}" 
+                                                      FontWeight="Bold" 
+                                                      Foreground="#FFA000" 
+                                                      FontSize="16"/>
+                                                    </StackPanel>
 
-                            <TextBlock Text="Оценка (1-5):" Margin="0,0,0,5" FontWeight="SemiBold"/>
-                            <ComboBox x:Name="cbRating" Height="35" Margin="0,0,0,10" FontSize="13">
-                                <ComboBoxItem Content="⭐⭐⭐⭐⭐ (5)" Tag="5"/>
-                                <ComboBoxItem Content="⭐⭐⭐⭐ (4)" Tag="4"/>
-                                <ComboBoxItem Content="⭐⭐⭐ (3)" Tag="3"/>
-                                <ComboBoxItem Content="⭐⭐ (2)" Tag="2"/>
-                                <ComboBoxItem Content="⭐ (1)" Tag="1"/>
-                            </ComboBox>
+                                                    <TextBlock Text="{Binding Driver.Car.Model}" 
+                                                  Margin="0,5,0,0" Foreground="Gray"/>
+                                                    <TextBlock Text="{Binding Driver.Car.PlateNumber}" 
+                                                  FontWeight="SemiBold"/>
 
-                            <TextBlock Text="Комментарий:" Margin="0,0,0,5" FontWeight="SemiBold"/>
-                            <TextBox x:Name="txtReviewComment" Height="80" Margin="0,0,0,15" 
-                        FontSize="13" TextWrapping="Wrap" AcceptsReturn="True"
-                        VerticalContentAlignment="Top"/>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                                        <TextBlock Text="📝 Отзывов: " 
+                                                      FontWeight="SemiBold"/>
+                                                        <TextBlock Text="{Binding ReviewCount}"/>
+                                                    </StackPanel>
 
-                            <Button Content="✍️ Оставить отзыв" Click="BtnAddReview_Click"
-                       Style="{StaticResource PrimaryButton}" Height="45" FontSize="16"/>
+                                                    <TextBlock Text="{Binding LastUpdatedAt, 
+                                              StringFormat={}{0:dd.MM.yyyy HH:mm}}" 
+                                              FontStyle="Italic" FontSize="11" 
+                                              Foreground="#999" Margin="0,5,0,0"/>
 
-                            <TextBlock x:Name="txtReviewResult" Margin="0,15,0,0" 
-                          TextWrapping="Wrap" FontWeight="Bold"
-                          HorizontalAlignment="Center" FontSize="14"/>
-                        </StackPanel>
+                                                    <Button Content="📋 Показать отзывы" 
+                                               Tag="{Binding DriverID}" 
+                                               Click="BtnShowDriverReviews_Click"
+                                               Style="{StaticResource PrimaryButton}"
+                                               Margin="0,10,0,0" Height="35"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Grid>
                     </Border>
 
+                    <!-- Форма добавления отзыва -->
                     <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="5,0,0,0">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -277,43 +342,64 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
 
-                            <StackPanel Grid.Row="0" Margin="0,0,0,10">
-                                <TextBlock Text="📋 Просмотр отзывов" FontSize="20" FontWeight="Bold" 
-                              Margin="0,0,0,10" Foreground="#4A90E2"/>
+                            <StackPanel Grid.Row="0">
+                                <TextBlock Text="✍️ Оставить отзыв водителю" 
+                              FontSize="20" FontWeight="Bold" 
+                              Margin="0,0,0,15" Foreground="#4A90E2"/>
 
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="По поездке №:" VerticalAlignment="Center" 
-                                  Margin="0,0,10,0" FontWeight="SemiBold"/>
-                                    <TextBox x:Name="txtViewReviewTripId" Width="100" Height="30" 
-                                FontSize="13"/>
-                                    <Button Content="Показать" Click="BtnShowReviews_Click" 
-                               Style="{StaticResource PrimaryButton}" 
-                               Margin="10,0,0,0" Height="34"/>
-                                </StackPanel>
+                                <TextBlock Text="№ поездки:" Margin="0,0,0,5" FontWeight="SemiBold"/>
+                                <TextBox x:Name="txtReviewTripIdNew" Height="35" Margin="0,0,0,10" 
+                            FontSize="13" VerticalContentAlignment="Center"/>
+
+                                <TextBlock Text="ID пользователя:" Margin="0,0,0,5" FontWeight="SemiBold"/>
+                                <TextBox x:Name="txtReviewUserId" Height="35" Margin="0,0,0,10" 
+                            FontSize="13" VerticalContentAlignment="Center"/>
+
+                                <TextBlock Text="Оценка (1-5):" Margin="0,0,0,5" FontWeight="SemiBold"/>
+                                <ComboBox x:Name="cbReviewRating" Height="35" Margin="0,0,0,10" FontSize="13">
+                                    <ComboBoxItem Content="⭐⭐⭐⭐⭐ (5)" Tag="5"/>
+                                    <ComboBoxItem Content="⭐⭐⭐⭐ (4)" Tag="4"/>
+                                    <ComboBoxItem Content="⭐⭐⭐ (3)" Tag="3"/>
+                                    <ComboBoxItem Content="⭐⭐ (2)" Tag="2"/>
+                                    <ComboBoxItem Content="⭐ (1)" Tag="1"/>
+                                </ComboBox>
+
+                                <TextBlock Text="Комментарий:" Margin="0,0,0,5" FontWeight="SemiBold"/>
+                                <TextBox x:Name="txtReviewCommentNew" Height="80" Margin="0,0,0,15" 
+                            FontSize="13" TextWrapping="Wrap" AcceptsReturn="True" 
+                            VerticalContentAlignment="Top"/>
+
+                                <Button Content="💾 Добавить отзыв" Click="BtnAddDriverReview_Click"
+                           Style="{StaticResource PrimaryButton}" Height="45" FontSize="16"/>
+
+                                <TextBlock x:Name="txtReviewStatusMessage" Margin="0,15,0,0" 
+                              TextWrapping="Wrap" FontWeight="Bold" 
+                              HorizontalAlignment="Center" FontSize="14"/>
                             </StackPanel>
 
-                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                                <ItemsControl x:Name="icReviews">
+                            <!-- Отзывы выбранного водителя -->
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,10,0,0">
+                                <ItemsControl x:Name="icSelectedDriverReviews">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border Background="#F5F5F5" Padding="15" CornerRadius="8" 
-                                       Margin="0,0,0,10">
+                                            <Border Background="#FAFAFA" Padding="12" 
+                                       CornerRadius="6" Margin="0,0,0,8">
                                                 <StackPanel>
-                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                                                    <StackPanel Orientation="Horizontal">
                                                         <TextBlock Text="{Binding RatingStars}" 
-                                                      FontSize="16" FontWeight="Bold"
+                                                      FontSize="14" FontWeight="Bold" 
                                                       Foreground="#FFA000"/>
                                                         <TextBlock Text="{Binding CreatedAt, 
                                                       StringFormat={}{0:dd.MM.yyyy HH:mm}}" 
-                                                      Margin="10,0,0,0" Foreground="Gray"
-                                                      FontSize="12"/>
+                                                      Margin="10,0,0,0" Foreground="Gray" 
+                                                      FontSize="11"/>
                                                     </StackPanel>
                                                     <TextBlock Text="{Binding Comment}" 
-                                                  TextWrapping="Wrap" FontSize="13"
-                                                  Margin="0,0,0,5"/>
+                                                  TextWrapping="Wrap" FontSize="12" 
+                                                  Margin="0,5,0,0"/>
                                                     <TextBlock Text="{Binding UserName}" 
-                                                  FontWeight="SemiBold" FontSize="12"
-                                                  Foreground="#1976D2"/>
+                                                  FontWeight="SemiBold" FontSize="11" 
+                                                  Foreground="#1976D2" Margin="0,5,0,0"/>
                                                 </StackPanel>
                                             </Border>
                                         </DataTemplate>

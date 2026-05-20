@@ -51,7 +51,6 @@ namespace TaxiService.Business.Modules
             decimal commission = totalCost * (tariff.CommissionPercent / 100);
             return Math.Round(commission, 2);
         }
-
         #endregion
 
         #region Методы проверки доступности
@@ -73,7 +72,6 @@ namespace TaxiService.Business.Modules
                 .Where(d => d.Status == "Available")
                 .ToList();
         }
-
         #endregion
 
         #region Методы работы с поездками
@@ -125,6 +123,7 @@ namespace TaxiService.Business.Modules
                 .ThenInclude(d => d!.Car)
                 .Include(t => t.Tariff)
                 .Include(t => t.User)
+                .Include(t => t.PromoCode)
                 .Where(t => t.UserID == userId)
                 .OrderByDescending(t => t.CreatedAt)
                 .ToList();
@@ -151,7 +150,127 @@ namespace TaxiService.Business.Modules
                 _context.SaveChanges();
             }
         }
+        #endregion
 
+        #region Промокоды и скидки
+        public class PromoCodeResult
+        {
+            public bool Success { get; set; }
+            public string Message { get; set; } = string.Empty;
+            public decimal DiscountAmount { get; set; }
+            public decimal FinalCost { get; set; }
+            public PromoCode? PromoCode { get; set; }
+        }
+
+
+        /// <summary>Проверяет валидность промокода, рассчитывает скидку и возвращает результат применения</summary>
+        public PromoCodeResult ValidateAndApplyPromoCode(string code, int userId, decimal originalCost)
+        {
+            var result = new PromoCodeResult();
+
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                result.Success = false;
+                result.Message = "Введите код промокода";
+                return result;
+            }
+
+            string normalizedCode = code.Trim().ToLower();
+            var promoCode = _context.PromoCodes
+                .FirstOrDefault(p => p.Code.ToLower() == normalizedCode);
+
+            if (promoCode == null)
+            {
+                result.Success = false;
+                result.Message = "Промокод не найден";
+                return result;
+            }
+
+            if (!promoCode.IsActive)
+            {
+                result.Success = false;
+                result.Message = "Недействителен";
+                return result;
+            }
+
+            var now = DateTime.Now;
+            if (now < promoCode.StartDate)
+            {
+                result.Success = false;
+                result.Message = $"Промокод ещё не активен. Начало: {promoCode.StartDate:dd.MM.yyyy}";
+                return result;
+            }
+
+            if (now > promoCode.EndDate)
+            {
+                result.Success = false;
+                result.Message = "Истёк срок действия";
+                return result;
+            }
+
+            decimal discountAmount = promoCode.DiscountType == "Percent"
+                ? originalCost * (promoCode.DiscountValue / 100)
+                : promoCode.DiscountValue;
+
+            if (discountAmount > originalCost)
+                discountAmount = originalCost;
+
+            decimal finalCost = originalCost - discountAmount;
+
+            result.Success = true;
+            result.Message = "Применён";
+            result.DiscountAmount = Math.Round(discountAmount, 2);
+            result.FinalCost = Math.Round(finalCost, 2);
+            result.PromoCode = promoCode;
+
+            return result;
+        }
+
+
+        /// <summary> Сохраняет факт использования промокода в БД и обновляет итоговую стоимость поездки/// </summary>
+        public PromoCodeUsage ApplyPromoCodeToTrip(int tripId, int promoCodeId, int userId, decimal discountAmount)
+        {
+            var usage = new PromoCodeUsage
+            {
+                TripID = tripId,
+                PromoCodeID = promoCodeId,
+                UserID = userId,
+                DiscountAmount = discountAmount,
+                AppliedAt = DateTime.Now
+            };
+
+            _context.PromoCodeUsages.Add(usage);
+
+            var trip = _context.Trips.Find(tripId);
+            if (trip != null)
+            {
+                trip.PromoCodeID = promoCodeId;
+                trip.DiscountAmount = discountAmount;
+                trip.OriginalCost = trip.TotalCost;
+                trip.TotalCost = trip.TotalCost - discountAmount;
+            }
+
+            _context.SaveChanges();
+            return usage;
+        }
+
+
+        /// <summary>Возвращает список всех активных и действующих на текущую дату промокодов/// </summary>
+        public List<PromoCode> GetAllActivePromoCodes()
+        {
+            var now = DateTime.Now;
+            return _context.PromoCodes
+                .Where(p => p.IsActive && p.StartDate <= now && p.EndDate >= now)
+                .ToList();
+        }
+
+        /// <summary> Ищет промокод по его строковому коду/// </summary>
+        public PromoCode? GetPromoCodeByCode(string code)
+        {
+            string normalizedCode = code.Trim().ToLower();
+            return _context.PromoCodes
+                .FirstOrDefault(p => p.Code.ToLower() == normalizedCode);
+        }
         #endregion
 
         #region Формирование квитанции
@@ -166,6 +285,7 @@ namespace TaxiService.Business.Modules
                 .ThenInclude(d => d!.Car)
                 .Include(t => t.Tariff)
                 .Include(t => t.Payment)
+                .Include(t => t.PromoCode)
                 .FirstOrDefault(t => t.TripID == tripId);
 
             if (trip == null)
@@ -207,7 +327,22 @@ namespace TaxiService.Business.Modules
             receipt.AppendLine($"  За км: {trip.Tariff.PricePerKm} ₽/км");
             receipt.AppendLine("───────────────────────────────────────");
             receipt.AppendLine("СТОИМОСТЬ:");
-            receipt.AppendLine($"  Стоимость поездки: {trip.TotalCost} ₽");
+
+            if (trip.DiscountAmount.HasValue && trip.DiscountAmount > 0)
+            {
+                receipt.AppendLine($"  Исходная стоимость: {trip.OriginalCost} ₽");
+                receipt.AppendLine($"  Скидка: -{trip.DiscountAmount} ₽");
+                if (trip.PromoCode != null)
+                {
+                    receipt.AppendLine($"  Промокод: {trip.PromoCode.Code}");
+                }
+                receipt.AppendLine($"  ИТОГО СО СКИДКОЙ: {trip.TotalCost} ₽");
+            }
+            else
+            {
+                receipt.AppendLine($"  Стоимость поездки: {trip.TotalCost} ₽");
+            }
+
             receipt.AppendLine($"  Комиссия сервиса: {trip.ServiceCommission} ₽");
             receipt.AppendLine($"  ИТОГО: {trip.TotalCost} ₽");
             receipt.AppendLine("───────────────────────────────────────");
@@ -225,7 +360,6 @@ namespace TaxiService.Business.Modules
 
             return receipt.ToString();
         }
-
         #endregion
 
         #region Получение данных
@@ -237,12 +371,15 @@ namespace TaxiService.Business.Modules
             return _context.Tariffs.ToList();
         }
 
+
         /// <summary>Возвращает всех зарегистрированных пользователей</summary>
         /// <returns>Список пользователей</returns>
         public List<User> GetAllUsers()
         {
             return _context.Users.ToList();
         }
+
+
 
         /// <summary>Возвращает всех водителей с привязанными автомобилями</summary>
         /// <returns>Список водителей</returns>
@@ -276,10 +413,8 @@ namespace TaxiService.Business.Modules
 
             _context.Payments.Add(payment);
             _context.SaveChanges();
-
             return payment;
         }
-
         #endregion
 
         #region IDisposable
@@ -297,17 +432,17 @@ namespace TaxiService.Business.Modules
             }
         }
 
+
         /// <summary>Освобождает все ресурсы, используемые модулем</summary>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
         #endregion
 
-
         #region Методы работы с отзывами
+
 
         /// <summary>Создаёт отзыв к поездке и пересчитывает средний рейтинг водителя</summary>
         /// <returns>Созданный объект отзыва</returns>
@@ -316,6 +451,9 @@ namespace TaxiService.Business.Modules
             var trip = _context.Trips.Find(tripId);
             if (trip == null)
                 throw new ArgumentException("Поездка не найдена", nameof(tripId));
+
+            if (trip.Status != "Completed")
+                throw new InvalidOperationException("Отзыв можно оставить только после завершения поездки");
 
             var existingReview = _context.Reviews.FirstOrDefault(r => r.TripID == tripId);
             if (existingReview != null)
@@ -328,7 +466,6 @@ namespace TaxiService.Business.Modules
                 Comment = comment,
                 CreatedAt = DateTime.Now
             };
-
             _context.Reviews.Add(review);
 
             if (trip.DriverID.HasValue)
@@ -342,10 +479,10 @@ namespace TaxiService.Business.Modules
                     driver.Rating = Math.Round(avgRating, 2);
                 }
             }
-
             _context.SaveChanges();
             return review;
         }
+
 
         /// <summary>Возвращает все отзывы, оставленные к конкретной поездке</summary>
         /// <returns>Список отзывов</returns>
@@ -357,6 +494,7 @@ namespace TaxiService.Business.Modules
                 .Where(r => r.TripID == tripId)
                 .ToList();
         }
+
 
         /// <summary>Возвращает все отзывы о водителе, отсортированные по дате</summary>
         /// <returns>Список отзывов</returns>

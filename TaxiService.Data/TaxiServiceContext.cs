@@ -5,12 +5,12 @@ using TaxiService.Data.Models;
 
 namespace TaxiService.Data
 {
+    /// <summary>Создаёт контекст с настройкой подключения по умолчанию</summary>
     public class TaxiServiceContext : DbContext
     {
-        /// <summary>Создаёт контекст с настройкой подключения по умолчанию.</summary>
         public TaxiServiceContext() { }
 
-        /// <summary>Создаёт контекст с явной передачей параметров EF Core.</summary>
+        /// <summary>Создаёт контекст с явной передачей параметров EF Core</summary>
         public TaxiServiceContext(DbContextOptions<TaxiServiceContext> options) : base(options) { }
 
         public DbSet<User> Users => Set<User>();
@@ -20,8 +20,11 @@ namespace TaxiService.Data
         public DbSet<Trip> Trips => Set<Trip>();
         public DbSet<Payment> Payments => Set<Payment>();
         public DbSet<Review> Reviews => Set<Review>();
+        public DbSet<PromoCode> PromoCodes => Set<PromoCode>();
+        public DbSet<PromoCodeUsage> PromoCodeUsages => Set<PromoCodeUsage>();
+        public DbSet<DriverRating> DriverRatings => Set<DriverRating>();
 
-        /// <summary>Автоматически подставляет строку подключения к SQL Server.</summary>
+        /// <summary>Автоматически подставляет строку подключения к SQL Server</summary>
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -30,7 +33,7 @@ namespace TaxiService.Data
             }
         }
 
-        /// <summary>Настраивает точные типы decimal для числовых столбцов БД.</summary>
+        /// <summary>Настраивает точные типы decimal для числовых столбцов БД</summary>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -41,6 +44,8 @@ namespace TaxiService.Data
                 entity.Property(e => e.DistanceKm).HasColumnType("decimal(10,2)");
                 entity.Property(e => e.TotalCost).HasColumnType("decimal(10,2)");
                 entity.Property(e => e.ServiceCommission).HasColumnType("decimal(10,2)");
+                entity.Property(e => e.OriginalCost).HasColumnType("decimal(10,2)");
+                entity.Property(e => e.DiscountAmount).HasColumnType("decimal(10,2)");
             });
 
             modelBuilder.Entity<Driver>(entity =>
@@ -58,6 +63,26 @@ namespace TaxiService.Data
             modelBuilder.Entity<Payment>(entity =>
             {
                 entity.Property(e => e.Amount).HasColumnType("decimal(10,2)");
+            });
+
+            modelBuilder.Entity<PromoCode>(entity =>
+            {
+                entity.HasKey(e => e.PromoCodeID);
+                entity.Property(e => e.DiscountValue).HasColumnType("decimal(10,2)");
+                entity.HasIndex(e => e.Code).IsUnique();
+            });
+
+            modelBuilder.Entity<PromoCodeUsage>(entity =>
+            {
+                entity.HasKey(e => e.UsageID);
+                entity.Property(e => e.DiscountAmount).HasColumnType("decimal(10,2)");
+            });
+
+            modelBuilder.Entity<DriverRating>(entity =>
+            {
+                entity.HasKey(e => e.DriverRatingID);
+                entity.HasIndex(e => e.DriverID).IsUnique();
+                entity.Property(e => e.AverageRating).HasColumnType("decimal(3,2)");
             });
         }
     }

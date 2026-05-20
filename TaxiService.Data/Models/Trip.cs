@@ -40,6 +40,14 @@ namespace TaxiService.Data.Models
 
         public DateTime? CompletedAt { get; set; }
 
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal? OriginalCost { get; set; }
+
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal? DiscountAmount { get; set; }
+
+        public int? PromoCodeID { get; set; }
+
         [ForeignKey("UserID")]
         public virtual User User { get; set; } = null!;
 
@@ -48,6 +56,9 @@ namespace TaxiService.Data.Models
 
         [ForeignKey("TariffID")]
         public virtual Tariff Tariff { get; set; } = null!;
+
+        [ForeignKey("PromoCodeID")]
+        public virtual PromoCode? PromoCode { get; set; }
 
         public virtual Payment? Payment { get; set; }
 
